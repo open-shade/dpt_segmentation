@@ -38,32 +38,32 @@ class RosIO(Node):
         self.declare_parameter('pub_masks', True)
         self.image_subscription = self.create_subscription(
             Image,
-            '/<name>/sub/image_raw',
+            '/dpt/sub/image_raw',
             self.listener_callback,
             10
         )
 
         self.image_publisher = self.create_publisher(
             String,
-            '/<name>/pub/image',
+            '/dpt/pub/image',
             1
         )
     
         self.pixels_publisher = self.create_publisher(
             String,
-            '/<name>/pub/pixels',
+            '/dpt/pub/pixels',
             1
         )
 
         self.detection_publisher = self.create_publisher(
             String,
-            '/<name>/pub/detections',
+            '/dpt/pub/detections',
             1
         )
 
         self.mask_publisher = self.create_publisher(
             String,
-            '/<name>/pub/mask',
+            '/dpt/pub/mask',
             1
         )
 
@@ -116,7 +116,7 @@ class RosIO(Node):
 
 
 def main(args=None):
-    print('<name> Started')
+    print('dpt Started')
 
     rclpy.init(args=args)
 
