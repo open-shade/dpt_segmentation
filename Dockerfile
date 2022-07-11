@@ -22,12 +22,12 @@ RUN apt update && \
     echo "source /opt/shade/setup.sh" >> /home/shade/shade_ws/start.sh && \
     echo "source /opt/ros/${ROS_VERSION}/setup.sh" >> /home/shade/shade_ws/start.sh && \
     echo "source ./install/setup.sh" >> ./start.sh && \
-    echo "ros2 run <name>_ros2 <name>_ros2" >> /home/shade/shade_ws/start.sh && \
+    echo "ros2 run dpt_seg_ros2 dpt_seg_ros2" >> /home/shade/shade_ws/start.sh && \
     chmod +x ./start.sh
 
-COPY . ./src/<name>
+COPY . ./src/dpt_seg
 
-RUN pip3 install ./src/<name> && \
+RUN pip3 install ./src/dpt_seg && \
     : "Install the model" && \
     python3 -c "from transformers import AutoFeatureExtractor; AutoFeatureExtractor.from_pretrained('${MODEL_NAME}')" && \
     colcon build

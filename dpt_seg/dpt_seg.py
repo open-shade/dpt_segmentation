@@ -13,7 +13,7 @@ from cv_bridge import CvBridge
 ALGO_VERSION = os.getenv("MODEL_NAME")
 
 if not ALGO_VERSION:
-    ALGO_VERSION = '<default here>'
+    ALGO_VERSION = 'Intel/dpt-large-ade'
 
 
 def predict(image: Image):
