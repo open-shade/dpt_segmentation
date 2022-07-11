@@ -38,32 +38,32 @@ class RosIO(Node):
         self.declare_parameter('pub_masks', True)
         self.image_subscription = self.create_subscription(
             Image,
-            '/dpt/sub/image_raw',
+            '/dpt/image_raw',
             self.listener_callback,
             10
         )
 
         self.image_publisher = self.create_publisher(
             String,
-            '/dpt/pub/image',
+            '/dpt/image',
             1
         )
     
         self.pixels_publisher = self.create_publisher(
             String,
-            '/dpt/pub/pixels',
+            '/dpt/pixels',
             1
         )
 
         self.detection_publisher = self.create_publisher(
             String,
-            '/dpt/pub/detections',
+            '/dpt/detections',
             1
         )
 
         self.mask_publisher = self.create_publisher(
             String,
-            '/dpt/pub/mask',
+            '/dpt/mask',
             1
         )
 
