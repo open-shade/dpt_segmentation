@@ -3,9 +3,11 @@
 <package format="3">
   <name>dpt_seg</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>The model assemble tokens from various stages of the vision transformer into image-like representations at 
+  various resolutions and progressively combine them into full-resolution predictions using a convolutional decoder. The transformer backbone processes representations at a constant and 
+  relatively high resolution and has a global receptive field at every stage. We implement a semantic segmentation head on top.</description>
   <maintainer email="support@shaderobotics.com">Shade Robotics</maintainer>
-  <license>TODO: License declaration</license>
+  <license>apache-2.0</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
