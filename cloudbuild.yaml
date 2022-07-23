@@ -27,6 +27,7 @@ steps:
     args: ['-c', 'docker buildx build --platform $_DOCKER_BUILDX_PLATFORMS -t $$USERNAME/dpt-segmentation:${_ROS_VERSION}-${_TAG} . --build-arg ROS_VERSION=${_ROS_VERSION} --build-arg MODEL_VERSION=${_MODEL_VERSION} --build-arg ORGANIZATION=${_ORGANIZATION} --push']
     secretEnv: ['USERNAME']
 options:
+  machineType: 'N1_HIGHCPU_32'
   env:
     - DOCKER_CLI_EXPERIMENTAL=enabled
 substitutions:
