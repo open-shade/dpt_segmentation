@@ -22,7 +22,7 @@ RUN apt update && \
     echo "source /opt/shade/setup.sh" >> /home/shade/shade_ws/start.sh && \
     echo "source /opt/ros/${ROS_VERSION}/setup.sh" >> /home/shade/shade_ws/start.sh && \
     echo "source ./install/setup.sh" >> ./start.sh && \
-    echo "ros2 run dpt_seg_ros2 dpt_seg_ros2" >> /home/shade/shade_ws/start.sh && \
+    echo "ros2 run dpt_seg dpt_seg" >> /home/shade/shade_ws/start.sh && \
     chmod +x ./start.sh
 
 COPY . ./src/dpt_seg

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ALGO: shaderobotics/dpt-segmentation
-    container: shaderobotics/dpt-segmentation:foxy-large-ade
+    container: shaderobotics/dpt-segmentation:humble-large-ade
     steps:
       - run: cd /home/shade/shade_ws && curl https://raw.githubusercontent.com/open-shade/algos/main/tests/run_tests.sh --output ./run_tests.sh
       - run: cd /home/shade/shade_ws && chmod +x ./run_tests.sh && ./run_tests.sh
