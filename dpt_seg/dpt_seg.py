@@ -11,9 +11,7 @@ from cv_bridge import CvBridge
 
 
 def ade_palette():
-    """
-    ADE20K palette that maps each class to RGB values.
-    """
+    """ADE20K palette that maps each class to RGB values."""
     return [[120, 120, 120], [180, 120, 120], [6, 230, 230], [80, 50, 50],
             [4, 200, 3], [120, 120, 80], [140, 140, 140], [204, 5, 255],
             [230, 230, 230], [4, 250, 7], [224, 5, 255], [235, 255, 7],
@@ -88,13 +86,13 @@ class RosIO(Node):
         )
 
         self.image_publisher = self.create_publisher(
-            String,
+            Image,
             '/dpt/image',
             1
         )
 
         self.pixels_publisher = self.create_publisher(
-            String,
+            Image,
             '/dpt/pixels',
             1
         )
@@ -106,7 +104,7 @@ class RosIO(Node):
         )
 
         self.mask_publisher = self.create_publisher(
-            String,
+            Image,
             '/dpt/mask',
             1
         )
@@ -114,18 +112,20 @@ class RosIO(Node):
     def listener_callback(self, msg: Image):
         bridge = CvBridge()
         cv_image: np.ndarray = bridge.imgmsg_to_cv2(msg)
-        np_image = np.uint8(cv_image)
+        np_image = cv_image.astype(np.uint8)
         converted_image = PilImage.fromarray(np_image, 'RGB')
         labels, logits = predict(converted_image)
         print(f'Predicted Segmentation')
+        w, h = converted_image.size
 
         upsampled_logits = torch.nn.functional.interpolate(logits,
-                                                           size=np_image.size[::-1],  # (height, width)
+                                                           size=(h, w),  # (height, width)
                                                            mode='bilinear',
                                                            align_corners=False)
 
         # Second, apply argmax on the class dimension
         seg = upsampled_logits.argmax(dim=1)[0]
+        np_seg = seg.numpy().astype(np.uint8)
         color_seg = np.zeros((seg.shape[0], seg.shape[1], 3), dtype=np.uint8)  # height, width, 3
         palette = np.array(ade_palette())
         for label, color in enumerate(palette):
@@ -135,16 +135,16 @@ class RosIO(Node):
         color_seg = color_seg[..., ::-1]
 
         if self.get_parameter('pub_pixels').value:
-            pixel_output = bridge.cv2_to_imgsmg(seg, encoding="mono8")
+            pixel_output = bridge.cv2_to_imgmsg(np_seg, encoding="mono8")
             self.pixels_publisher.publish(pixel_output)
 
         if self.get_parameter('pub_image').value:
             img = np.uint8(cv_image) * 0.5 + color_seg * 0.5
-            img_output = bridge.cv2_to_imgsmg(img)
+            img_output = bridge.cv2_to_imgmsg(img)
             self.image_publisher.publish(img_output)
 
         if self.get_parameter('pub_masks').value:
-            mask_output = bridge.cv2_to_imgsmg(color_seg)
+            mask_output = bridge.cv2_to_imgmsg(color_seg)
             self.mask_publisher.publish(mask_output)
 
         if self.get_parameter('pub_detections').value:
@@ -152,7 +152,10 @@ class RosIO(Node):
             results = []
             for label in classes:
                 results.append(labels[label])
-            self.detection_publisher.publish(' '.join(results))
+
+            msg = String()
+            msg.data = ' '.join(results)
+            self.detection_publisher.publish(msg)
 
 
 def main(args=None):
